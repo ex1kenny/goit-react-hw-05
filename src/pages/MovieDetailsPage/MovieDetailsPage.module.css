@@ -1,0 +1,67 @@
+/* MovieDetailsPage.module.css */
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card img {
+  margin-right: 20px;
+}
+
+.description {
+  flex: 1;
+}
+
+.description h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.description p {
+  margin-bottom: 10px;
+}
+
+.additional {
+  margin-top: 20px;
+}
+
+.additional h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.list li {
+  margin-bottom: 10px;
+}
+
+.link {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.back {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.back:hover {
+  background-color: #0056b3;
+}

@@ -1,0 +1,24 @@
+/* MovieCast.module.css */
+
+.list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.list li {
+  margin-bottom: 20px;
+}
+
+.list img {
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
+.list p {
+  margin: 0;
+}
+
+.list p.character {
+  font-style: italic;
+}
