@@ -1,5 +1,11 @@
-import { Suspense, useState, useEffect } from "react";
-import { NavLink, Outlet, useParams, useNavigate } from "react-router-dom";
+import { Suspense, useState, useEffect, useRef } from "react";
+import {
+  NavLink,
+  Outlet,
+  useParams,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import { fetchMovieId } from "../../fetchMovie";
 import css from "./MovieDetailsPage.module.css";
 
@@ -8,6 +14,9 @@ export default function MovieDetailsPage() {
   const navigate = useNavigate();
   const params = useParams();
   const id = params.movieId;
+  const location = useLocation();
+
+  const backLink = useRef(location.state ?? "/");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -31,30 +40,39 @@ export default function MovieDetailsPage() {
     };
   }, [id]);
 
-  const handleGoBack = () => {
-    navigate(-1);
-  };
-
   return (
     <div className={css.container}>
-      <div className={css.card}>
-        <img
-          src={`https://image.tmdb.org/t/p/w500/${movie.poster_path || ""}`}
-          alt={movie.original_title || ""}
-          width="500"
-          height="600"
-        />
-        <div className={css.description}>
-          <h2>{movie.original_title || ""}</h2>
-          <p>User Score: {(movie.vote_average || 0) * 10}%</p>
-          <h3>Overview</h3>
-          <p>{movie.overview || ""}</p>
-          <h3>Genres</h3>
-          <p>
-            {movie.genres && movie.genres.map((genre) => genre.name).join(", ")}
-          </p>
+      <button
+        className={css.back}
+        type="button"
+        onClick={() => navigate(backLink.current)}
+      >
+        Go back
+      </button>
+      {Object.keys(movie).length === 0 ? (
+        <div className={css.noData}>No data available for this movie</div>
+      ) : (
+        <div className={css.card}>
+          <img
+            src={`https://image.tmdb.org/t/p/w500/${movie.poster_path || ""}`}
+            alt={movie.original_title || ""}
+            width="500"
+            height="600"
+          />
+          <div className={css.description}>
+            <h2>{movie.original_title || ""}</h2>
+            <p>User Score: {(movie.vote_average || 0) * 10}%</p>
+            <h3>Overview</h3>
+            <p>{movie.overview ? movie.overview : "No overview available"}</p>
+            <h3>Genres</h3>
+            <p>
+              {movie.genres && movie.genres.length > 0
+                ? movie.genres.map((genre) => genre.name).join(", ")
+                : "No genres available"}
+            </p>
+          </div>
         </div>
-      </div>
+      )}
 
       <hr />
 
@@ -79,10 +97,6 @@ export default function MovieDetailsPage() {
           <Outlet />
         </Suspense>
       </div>
-
-      <button className={css.back} type="button" onClick={handleGoBack}>
-        Go back
-      </button>
     </div>
   );
 }

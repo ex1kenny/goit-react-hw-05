@@ -28,6 +28,7 @@ export default function MovieCast() {
 
   return (
     <div>
+      {casts.length === 0 && <p>There are no casts yet.</p>}
       <ul className={css.list}>
         {casts.map((item) => (
           <li key={item.id}>

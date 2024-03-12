@@ -7,19 +7,19 @@ import { toast } from "react-hot-toast";
 import MovieList from "../../components /MovieList/MovieList";
 
 export default function MoviesPage() {
-  const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const location = useLocation();
+  const [params, setParams] = useSearchParams();
 
   useEffect(() => {
-    if (query === "") {
-      return;
-    }
+    const fetchData = async () => {
+      if (query === "") {
+        return;
+      }
 
-    const controller = new AbortController();
+      const controller = new AbortController();
 
-    async function fetchDataQuery() {
       try {
         const response = await fetchMovieQuery(controller, query);
         if (response.results.length === 0) {
@@ -32,26 +32,34 @@ export default function MoviesPage() {
           console.error("Error fetching data:", error);
           toast.error("An error occurred while fetching data");
         }
+      } finally {
+        controller.abort();
       }
-    }
-
-    fetchDataQuery();
-
-    return () => {
-      controller.abort();
     };
+
+    fetchData();
   }, [query]);
+
+  useEffect(() => {
+    const value = params.get("query") || "";
+    setQuery(value);
+  }, [params]);
+
+  const handleSubmit = (values, actions) => {
+    if (values.query === "") {
+      toast.error("Please enter a search term");
+      setMovies([]);
+      return;
+    }
+    setQuery(values.query);
+    params.set("query", values.query);
+    setParams(params);
+    actions.resetForm();
+  };
 
   return (
     <div className={css.container}>
-      <Formik
-        className={css.form}
-        initialValues={{ query: "" }}
-        onSubmit={(values, { setSubmitting }) => {
-          setQuery(values.query);
-          setSubmitting(false);
-        }}
-      >
+      <Formik initialValues={{ query }} onSubmit={handleSubmit}>
         <Form>
           <Field type="text" name="query" className={css.label} />
           <button className={css.button} type="submit">
